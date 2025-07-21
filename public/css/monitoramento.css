@@ -1,0 +1,140 @@
+.main_principal {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+#time {
+    margin: 0px;
+}
+
+.container_monitoramento  {
+    max-width: 100%;
+    padding-inline: 1rem;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+}
+
+
+.container_dash {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    background: rgba(166, 166, 166, 0.2);
+    height: 23.5rem;
+    border: 2px solid #404040; 
+    border-radius: 0.6rem;
+}
+
+.graphCanvas {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+
+.canvas0 {
+    margin-top: 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50rem;
+    height: auto;
+    font-size: 1.5rem;
+}
+
+.canvas0 p {
+    display: flex;
+    justify-content: center;
+    border-radius: 1rem;
+    width: 16rem;
+    height: 2rem;
+    background-color: #e6626f;
+}
+
+.canvas1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 50rem;
+    height: 5rem;
+}
+
+ .canvas2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 50rem;
+    height: 14.5rem;
+}
+
+.canvas1_1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25rem;
+    height: 100%;
+}
+
+.canvas1_1 p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    width: 16rem;
+    height: 100%;
+    border: 2px solid #e6626f;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+
+@media(max-width: 1600px) {
+    .main_principal {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;    
+        width: 92rem;
+        gap: 0.1rem;
+    }
+    
+    .container_monitoramento {
+        width: 92rem;
+        gap: 0.5rem;
+    }
+
+    .container_dash {
+        height: 100%;
+    }
+
+    .canvas0 {
+         width: 42rem;
+    }
+
+    .canvas1 {
+        width: 42rem;
+        
+    }
+    
+    .canvas2 {
+        width: 42rem;
+        height: 12rem;
+    }
+
+    .canvas1_1 {
+        width: 20rem;
+    }
+}

@@ -1,0 +1,170 @@
+<%- include ('../partials/header.ejs'); -%>
+<%- include ('../partials/navbar.ejs'); -%>
+
+<main class="main_principal container-fluid h-100">
+
+    <div class="time_principal">
+        <p id="time"></p>
+    </div>
+    
+    <div class="container_monitoramento">
+
+        <!-- canvas 1 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+                    <div class="canvas0">
+                        <p id="linha1Operation">MISTURADOR 01</p>
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-1"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="value_geral" id="value-1a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-1"></canvas>
+                    </div>     
+            </div>
+        </div>
+
+        <!-- canvas 2 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+                    <div class="canvas0">
+                        <p id="linha2Operation">MISTURADOR 02</p>                 
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-2"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="value_geral" id="value-2a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-2"></canvas>
+                    </div>     
+            </div>
+        </div>
+
+        <!-- canvas 3 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+                    <div class="canvas0">
+                        <p id="linha3Operation">MISTURADOR 03</p>                 
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-3"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="value_geral" id="value-3a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-3"></canvas>
+                    </div>     
+            </div>
+        </div>
+
+        <!-- canvas 4 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+
+                    <div class="canvas0">
+                        <p id="linha4Operation">MISTURADOR 04</p>                   
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-4"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="canvas_ring" id="value-4a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-4"></canvas>
+                    </div>     
+            </div>
+        </div>
+
+        <!-- canvas 5 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+
+                    <div class="canvas0">
+                        <p id="linha5Operation">MISTURADOR 05</p>                   
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-5"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="canvas_ring" id="value-5a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-5"></canvas>
+                    </div>     
+            </div>
+        </div>
+
+        <!-- canvas 6 -->
+        <div class="container_dash">
+            <div class="graphCanvas">
+
+                    <div class="canvas0">
+                        <p id="linha6Operation">MISTURADOR 06</p>                   
+                    </div>
+
+                    <div class="canvas1">
+                        <div class="canvas1_1">
+                            <span >Quantidade Programada</span>
+                            <p class="value_geral" id="value-6"></p>
+                        </div>
+
+                        <div class="canvas1_1">
+                            <span >Quantidade Produzida</span>
+                            <p class="canvas_ring" id="value-6a"></p>
+                        </div>
+                    </div>
+
+                    <div class="canvas2">
+                        <canvas class="graph" id="grafico-6"></canvas>
+                    </div>     
+            </div>
+        </div>
+   </div>
+
+</main>
+
+
+<%- include ('../partials/footer.ejs'); -%>
+<script type="module" src="/js/monitoramento/monitoramento.js"></script>
