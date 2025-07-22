@@ -63,154 +63,164 @@ var dataHoraPdfCsv = (valor) => {
 }
 
 function criarTabela(value1) {
-    axios.get(`/relatorio/${value1}`).then(response => {
-        console.log(response.data)
-        let usuarioDados = response.data.dadosUsuarios[0];   
-        // Limpa o container antes de criar novas tabelas
-        $('#container-tabelas-relatorio').empty();
-        tableGeraisProducao = [];
-        tableGeraisReceita = []; 
-        gruposPorBatch = {};    
-        
-        
-        for (let a of response.data.producaoGerais) {
-            if (!gruposPorBatch[a.Batch]) gruposPorBatch[a.Batch] = [];
-            gruposPorBatch[a.Batch].push(a);
-        }
-        
-        console.log(gruposPorBatch)
+    if(value1 === '') {
+        $('#mensagemLetra').modal('show');
+    } else {
 
-        for(let a of response.data.producaoGerais) {
-            tableGeraisProducao.push([a.Batch, a.Insumo, a.Local, a.Desejado, a.Real, a.Erro_Kg, a.Erro_Permitido, a.Tempo_de_Dosagem]);
-        }
+        axios.get(`/relatorio/${value1}`).then(response => {
+            console.log(response.data)
+            let usuarioDados = response.data.dadosUsuarios[0];   
+            // Limpa o container antes de criar novas tabelas
+            $('#container-tabelas-relatorio').empty();
+            tableGeraisProducao = [];
+            tableGeraisReceita = []; 
+            gruposPorBatch = {};    
 
-        let valorParametros = response.data.parametroGerais.slice(0, tableGeraisProducao.length);
-        for(let a of valorParametros) {
-            tableGeraisReceita.push([a.Descricao, a.Valor]);
-        }
+            if(usuarioDados.Status !=='F') {
+                $('#mensagemOrdemAbortada').modal('show');  
+            } else {
 
-        // Atualiza informações do usuário
-        ordemProducao.textContent = usuarioDados.Codigo;
-        receitaProduto.textContent = response.data.producaoGerais[0].Receita ?? '';
-        usuarioCriacao.textContent = usuarioDados.UserA;
-        usuarioExecucao.textContent = usuarioDados.UserC;
-        dataCriacao.textContent = dataHora(usuarioDados.DataCriacao);
-        linha.textContent = usuarioDados.Nome_Linha;
-        lote.textContent = usuarioDados.Lote;
-        QuantidadePrevista = usuarioDados.QuantidadePrevista
+                for (let a of response.data.producaoGerais) {
+                    if (!gruposPorBatch[a.Batch]) gruposPorBatch[a.Batch] = [];
+                    gruposPorBatch[a.Batch].push(a);
+                }
 
-        // Para cada batch, cria as tabelas
-        Object.keys(gruposPorBatch).forEach(batch => {
-            let dadosBatch = gruposPorBatch[batch];
-            let datadosagem1;
-            // Calcula os totais
-            let totalDesejado = 0, totalReal = 0, totalErro = 0, totalPermitido = 0, totalTempo = 0;
-            let dataTableArray = [];
-            for (let a of dadosBatch) {
-                dataTableArray.push([
-                    a.Batch, a.Insumo, a.Local, a.Desejado, a.Real, a.Erro_Kg, a.Erro_Permitido, a.Tempo_de_Dosagem
-                ]);
-                totalDesejado += parseFloat(a.Desejado) || 0;
-                totalReal += parseFloat(a.Real) || 0;
-                totalErro += parseFloat(a.Erro_Kg) || 0;
-                totalPermitido += parseFloat(a.Erro_Permitido) || 0;
-                totalTempo += parseFloat(a.Tempo_de_Dosagem) || 0;
-                datadosagem1 = a.Data_Dosagem;
+                console.log(gruposPorBatch)
+
+                for(let a of response.data.producaoGerais) {
+                    tableGeraisProducao.push([a.Batch, a.Insumo, a.Local, a.Desejado, a.Real, a.Erro_Kg, a.Erro_Permitido, a.Tempo_de_Dosagem]);
+                }
+
+                let valorParametros = response.data.parametroGerais.slice(0, tableGeraisProducao.length);
+                for(let a of valorParametros) {
+                    tableGeraisReceita.push([a.Descricao, a.Valor]);
+                }
+
+                // Atualiza informações do usuário
+                ordemProducao.textContent = usuarioDados.Codigo;
+                receitaProduto.textContent = response.data.producaoGerais[0].Receita ?? '';
+                usuarioCriacao.textContent = usuarioDados.UserA;
+                usuarioExecucao.textContent = usuarioDados.UserC;
+                dataCriacao.textContent = dataHora(usuarioDados.DataCriacao);
+                linha.textContent = usuarioDados.Nome_Linha;
+                lote.textContent = usuarioDados.Lote;
+                QuantidadePrevista = usuarioDados.QuantidadePrevista
+
+                // Para cada batch, cria as tabelas
+                Object.keys(gruposPorBatch).forEach(batch => {
+                    let dadosBatch = gruposPorBatch[batch];
+                    let datadosagem1;
+                    // Calcula os totais
+                    let totalDesejado = 0, totalReal = 0, totalErro = 0, totalPermitido = 0, totalTempo = 0;
+                    let dataTableArray = [];
+                    for (let a of dadosBatch) {
+                        dataTableArray.push([
+                            a.Batch, a.Insumo, a.Local, a.Desejado, a.Real, a.Erro_Kg, a.Erro_Permitido, a.Tempo_de_Dosagem
+                        ]);
+                        totalDesejado += parseFloat(a.Desejado) || 0;
+                        totalReal += parseFloat(a.Real) || 0;
+                        totalErro += parseFloat(a.Erro_Kg) || 0;
+                        totalPermitido += parseFloat(a.Erro_Permitido) || 0;
+                        totalTempo += parseFloat(a.Tempo_de_Dosagem) || 0;
+                        datadosagem1 = a.Data_Dosagem;
+                    }
+
+                    // Gera IDs únicos por classe
+                    const tabelaRelatorioClass = 'classe-relatorio';
+                    const tabelaParametrosClass = 'classe-parametro';
+
+                    // Cria o HTML da tabela com classes específicas
+                    let tabelaHtml = `
+                        <div class="table-responsive" id="batchId${batch}">
+                            <div class="table_principal1">
+                                <h2 class="table">Batch ${batch} - Data ${dataHora(datadosagem1)}</h2>
+                                <table class="table text-black ${tabelaRelatorioClass}"  id="tabela-relatorio">
+                                    <thead>
+                                        <tr>
+                                            <th>Batch</th>
+                                            <th>Insumo</th>
+                                            <th>Local</th>
+                                            <th>Desejado Kg</th>
+                                            <th>Real Kg</th>
+                                            <th>Erro Kg</th>
+                                            <th>Erro Permitido %</th>
+                                            <th>Tempo (s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${dataTableArray.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>${totalDesejado.toFixed(2)}</th>
+                                            <th>${totalReal.toFixed(2)}</th>
+                                            <th>${totalErro.toFixed(2)}</th>
+                                            <th>${totalPermitido.toFixed(2)}</th>
+                                            <th>${totalTempo.toFixed(2)}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="table_principal2">
+                                <h2 class="table">Parâmetros</h2>
+                                <table class="table text-black ${tabelaParametrosClass}"  id="tabela-parametros">
+                                    <thead>
+                                        <tr>
+                                            <th>Descrição</th>
+                                            <th>Tempo (s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tableGeraisReceita.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+
+                    // Insere as tabelas no container
+                    $('#container-tabelas-relatorio').append(tabelaHtml);
+
+                    // Aplica estilos às tabelas de consumo
+                    $(`.${tabelaRelatorioClass}`).each(function() {
+                        $(this).find('tbody tr').each(function(index, row) {
+                            // Cor de fundo alternada
+                            if (index % 2 === 0) {
+                                $(row).css('background-color', '#D9D9D9');
+                            } else {
+                                $(row).css('background-color', '#F2F2F2');
+                            }
+                            // Destaca "Erro Kg" se diferente de zero
+                            const erroKgCell = $('td:eq(5)', row);
+                            if (parseFloat(erroKgCell.text()) !== 0) {
+                                erroKgCell.css('color', 'red');
+                            } else {
+                                erroKgCell.css('color', '');
+                            }
+                        });
+                    });
+
+                    // Aplica estilos às tabelas de parâmetros
+                    $(`.${tabelaParametrosClass}`).each(function() {
+                        $(this).find('tbody tr').each(function(index, row) {
+                            if (index % 2 === 0) {
+                                $(row).css('background-color', '#D9D9D9');
+                            } else {
+                                $(row).css('background-color', '#F2F2F2');
+                            }
+                        });
+                    });
+                });
             }
-
-            // Gera IDs únicos por classe
-            const tabelaRelatorioClass = 'classe-relatorio';
-            const tabelaParametrosClass = 'classe-parametro';
-
-            // Cria o HTML da tabela com classes específicas
-            let tabelaHtml = `
-                <div class="table-responsive" id="batchId${batch}">
-                    <div class="table_principal1">
-                        <h2 class="table">Batch ${batch} - Data ${dataHora(datadosagem1)}</h2>
-                        <table class="table text-black ${tabelaRelatorioClass}"  id="tabela-relatorio">
-                            <thead>
-                                <tr>
-                                    <th>Batch</th>
-                                    <th>Insumo</th>
-                                    <th>Local</th>
-                                    <th>Desejado Kg</th>
-                                    <th>Real Kg</th>
-                                    <th>Erro Kg</th>
-                                    <th>Erro Permitido %</th>
-                                    <th>Tempo (s)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${dataTableArray.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Total</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>${totalDesejado.toFixed(2)}</th>
-                                    <th>${totalReal.toFixed(2)}</th>
-                                    <th>${totalErro.toFixed(2)}</th>
-                                    <th>${totalPermitido.toFixed(2)}</th>
-                                    <th>${totalTempo.toFixed(2)}</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                    <div class="table_principal2">
-                        <h2 class="table">Parâmetros</h2>
-                        <table class="table text-black ${tabelaParametrosClass}"  id="tabela-parametros">
-                            <thead>
-                                <tr>
-                                    <th>Descrição</th>
-                                    <th>Tempo (s)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tableGeraisReceita.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-
-            // Insere as tabelas no container
-            $('#container-tabelas-relatorio').append(tabelaHtml);
-
-            // Aplica estilos às tabelas de consumo
-            $(`.${tabelaRelatorioClass}`).each(function() {
-                $(this).find('tbody tr').each(function(index, row) {
-                    // Cor de fundo alternada
-                    if (index % 2 === 0) {
-                        $(row).css('background-color', '#D9D9D9');
-                    } else {
-                        $(row).css('background-color', '#F2F2F2');
-                    }
-                    // Destaca "Erro Kg" se diferente de zero
-                    const erroKgCell = $('td:eq(5)', row);
-                    if (parseFloat(erroKgCell.text()) !== 0) {
-                        erroKgCell.css('color', 'red');
-                    } else {
-                        erroKgCell.css('color', '');
-                    }
-                });
-            });
-
-            // Aplica estilos às tabelas de parâmetros
-            $(`.${tabelaParametrosClass}`).each(function() {
-                $(this).find('tbody tr').each(function(index, row) {
-                    if (index % 2 === 0) {
-                        $(row).css('background-color', '#D9D9D9');
-                    } else {
-                        $(row).css('background-color', '#F2F2F2');
-                    }
-                });
-            });
+        }).catch(error => {
+            console.log(error);
         });
-    }).catch(error => {
-        console.log(error);
-    });
+
+    }
 }
 
 

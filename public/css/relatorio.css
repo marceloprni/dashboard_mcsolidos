@@ -150,6 +150,10 @@
     margin-right: 10px;
 }
 
+.modal_geral p {
+    margin-bottom: 0;
+}
+
 /* MEDIA QUERY */
 @media(max-width: 1600px) {
     .div_externa {
